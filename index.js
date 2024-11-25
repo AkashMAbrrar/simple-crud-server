@@ -21,15 +21,21 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-
+// create data
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-
     const database = client.db("usersDB");
     const userCollection = database.collection("users");
+    //  get method for get data from database
+    app.get("/users", async (req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
+    // post for create data on database
     app.post("/users", async (req, res) => {
       const user = req.body;
       console.log("new user", user);
